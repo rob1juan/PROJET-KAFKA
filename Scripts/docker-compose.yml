@@ -52,7 +52,7 @@ services:
       - "8080:8080" # Mirth Connect Administrator
       - "8443:8443" # Mirth Connect HTTPS interface
     volumes:
-      - /drives/D/Etude/FISA/FISA 4A/Semestre 8/Intergiciel/PROJET/ECHANTILLONS:/var/echantillon_hl7
+      - ./ECHANTILLONS:/var/echantillon_hl7
     environment:
       - DATABASE=postgres
       - DATABASE_URL=jdbc:postgresql://postgresdb:5432/HOPSIIA

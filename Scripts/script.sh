@@ -43,3 +43,5 @@ while ! nc -z localhost 8080; do
 done
 
 echo "mirthconnect est prêt."
+
+docker exec -u root mirthconnect chmod -R 777 /var/echantillon_hl7
