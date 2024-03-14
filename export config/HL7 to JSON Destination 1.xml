@@ -1,0 +1,181 @@
+<connector version="3.11.0">
+  <metaDataId>1</metaDataId>
+  <name>Destination 1</name>
+  <properties class="com.mirth.connect.connectors.file.FileDispatcherProperties" version="3.11.0">
+    <pluginProperties/>
+    <destinationConnectorProperties version="3.11.0">
+      <queueEnabled>false</queueEnabled>
+      <sendFirst>false</sendFirst>
+      <retryIntervalMillis>10000</retryIntervalMillis>
+      <regenerateTemplate>false</regenerateTemplate>
+      <retryCount>0</retryCount>
+      <rotate>false</rotate>
+      <includeFilterTransformer>false</includeFilterTransformer>
+      <threadCount>1</threadCount>
+      <threadAssignmentVariable></threadAssignmentVariable>
+      <validateResponse>false</validateResponse>
+      <resourceIds class="linked-hash-map">
+        <entry>
+          <string>Default Resource</string>
+          <string>[Default Resource]</string>
+        </entry>
+      </resourceIds>
+      <queueBufferSize>1000</queueBufferSize>
+      <reattachAttachments>true</reattachAttachments>
+    </destinationConnectorProperties>
+    <scheme>FILE</scheme>
+    <host>/var/finally</host>
+    <outputPattern>${dynamicFileName}</outputPattern>
+    <anonymous>true</anonymous>
+    <username>anonymous</username>
+    <password>anonymous</password>
+    <timeout>10000</timeout>
+    <keepConnectionOpen>true</keepConnectionOpen>
+    <maxIdleTime>0</maxIdleTime>
+    <secure>true</secure>
+    <passive>true</passive>
+    <validateConnection>true</validateConnection>
+    <outputAppend>false</outputAppend>
+    <errorOnExists>false</errorOnExists>
+    <temporary>false</temporary>
+    <binary>false</binary>
+    <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
+    <template>${message.encodedData}</template>
+  </properties>
+  <transformer version="3.11.0">
+    <elements>
+      <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.11.0">
+        <sequenceNumber>0</sequenceNumber>
+        <enabled>true</enabled>
+        <script>function formatDateHL7(hl7Date) {
+    if (hl7Date.length &gt;= 8) {
+        return hl7Date.substring(6, 8) + &quot;-&quot; + hl7Date.substring(4, 6) + &quot;-&quot; + hl7Date.substring(0, 4) +
+            (hl7Date.length &gt; 8 ? &quot; &quot; + hl7Date.substring(8, 10) + &quot;:&quot; + hl7Date.substring(10, 12) + &quot;:&quot; + hl7Date.substring(12, 14) : &quot;&quot;);
+    }
+    return hl7Date;
+}
+
+function buildAddressLine(part1, part2, part3) {
+    var addressParts = [];
+    if (part1) addressParts.push(part1);
+    if (part2) addressParts.push(part2);
+    if (part3) addressParts.push(part3);
+    return addressParts.join(&quot; - &quot;);
+}
+
+function buildNameLine(firstName, lastName) {
+    var nameParts = [];
+    if (firstName) nameParts.push(firstName);
+    if (lastName) nameParts.push(lastName);
+    return nameParts.join(&quot; &quot;);
+}
+
+tmp[&apos;id_patient&apos;] = msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString(); // numéro unique patient
+tmp[&apos;name_1&apos;] = buildNameLine(msg[&apos;PID&apos;][&apos;PID.5&apos;][0][&apos;PID.5.2&apos;].toString(), msg[&apos;PID&apos;][&apos;PID.5&apos;][0][&apos;PID.5.1&apos;].toString()); //nom 1
+tmp[&apos;name_2&apos;] = buildNameLine(msg[&apos;PID&apos;][&apos;PID.5&apos;][1][&apos;PID.5.2&apos;].toString(), msg[&apos;PID&apos;][&apos;PID.5&apos;][1][&apos;PID.5.1&apos;].toString()); //nom 2
+tmp[&apos;birthday&apos;] = formatDateHL7(msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString()); // date de naissance
+tmp[&apos;sex&apos;] = msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString() == &quot;M&quot; ? &quot;Male&quot; : &quot;Female&quot;; // genre
+tmp[&apos;nationnatilty&apos;] = msg[&apos;PID&apos;][&apos;PID.28&apos;].toString(); // nationnalité
+
+tmp[&apos;address&apos;] = buildAddressLine(msg[&apos;PID&apos;][&apos;PID.11&apos;][0][&apos;PID.11.1&apos;].toString(), msg[&apos;PID&apos;][&apos;PID.11&apos;][0][&apos;PID.11.3&apos;].toString(), msg[&apos;PID&apos;][&apos;PID.11&apos;][0][&apos;PID.11.5&apos;].toString());
+
+tmp[&apos;visit_number&apos;] = msg[&apos;PV1&apos;][&apos;PV1.19&apos;][&apos;PV1.19.1&apos;].toString(); // numero de sejour
+tmp[&apos;service&apos;] = msg[&apos;PV1&apos;][&apos;PV1.10&apos;][&apos;PV1.10.1&apos;].toString(); // service hospitalier
+tmp[&apos;bed&apos;] = msg[&apos;PV1&apos;][&apos;PV1.3&apos;][&apos;PV1.3.3&apos;].toString(); // lit
+tmp[&apos;room&apos;] = msg[&apos;PV1&apos;][&apos;PV1.3&apos;][&apos;PV1.3.2&apos;].toString(); // chambre
+tmp[&apos;admit_time&apos;] = formatDateHL7(msg[&apos;PV1&apos;][&apos;PV1.44&apos;][&apos;PV1.44.1&apos;].toString()); // Date de mouvement
+
+tmp[&apos;start_time&apos;] = formatDateHL7(msg[&apos;PV1&apos;][&apos;PV1.44&apos;][&apos;PV1.44.1&apos;].toString()); // Date de début
+tmp[&apos;end_time&apos;] = formatDateHL7(msg[&apos;PV1&apos;][&apos;PV1.45&apos;][&apos;PV1.45.1&apos;].toString()); // Date de fin
+
+
+// Génère un UUID
+var uuid = java.util.UUID.randomUUID().toString();
+
+// Format la date actuelle
+var now = new java.util.Date();
+var dateFormat = new java.text.SimpleDateFormat(&quot;yyyyMMddHHmmss&quot;);
+var formattedDate = dateFormat.format(now);
+
+// Construit le nom du fichier avec la date, l&apos;heure et l&apos;UUID
+var fileName = &apos;file_&apos; + formattedDate + &apos;_&apos; + uuid + &apos;.json&apos;;
+
+// Stocke le nom du fichier dans la channelMap pour l&apos;utiliser dans la configuration du File Writer
+channelMap.put(&apos;dynamicFileName&apos;, fileName);</script>
+      </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+    </elements>
+    <inboundTemplate encoding="base64">TVNIfF5+XCZ8TUlQSUh8Q09OVkVSR0VOQ0V8U0lIfERQSXwyMDIyMDExNDE3MDMzNHwyNDJ8QURUXkEwNF5BRFRfQTAxfDIwMjIwMTE0MTcwMzQ1OTR8UHwyLjVeRlJBXjIuNXx8fHx8RlJBfDg4NTkvMXxGUgpFVk58fDIwMjIwMTE0MTcwMzM0fHx8fDIwMjIwMTE0MDgwMTAwClBJRHwxfHw4MTE3MzA4NjNeXl5DT05WRVJHRU5DRV5QSV5efHxub204MTE3MzA4NjNeSUJSQUhJTV5eXk1yXl5Efm5vbTgxMTczMDg2M15JQlJBSElNXl5eTXJeXkx8fDIwMDIxMDA5fE18fHw3IFJVRSBIRU5SSSBUUk9ZQVReICBedmlsbGU4MTE3MzA4NjNeXmNwODExNzMwODYzXjEwMF5Ifl5edmlsbGU4MTE3MzA4NjNeXmNwODExNzMwODYzXjEwMF5CREx+XiAgXl5eXl5DfHx0ZWw4MTE3MzA4NjNeUFJOXkNQXmFkcm1haWw4MTE3MzA4NjNeXl5eXl5eXnRlbDgxMTczMDg2M3xeXl5eXl5eXl5eXnx8U3x8MTE2NTU2MjE5OV5eXkNPTlZFUkdFTkNFfHx8Xl5eQ09OVkVSR0VOQ0V8fHx8fHx8fHxOfFBST1YKUEQxfHxVClJPTHwxfFVQfE9EUlB8Xm1lZGVjaW44MTE3MzA4NjNeXl5eXl5eRUleTF5eXnx8fHx8fHxeIF5eXl4KUFYxfDF8T3w3ODMyXl58fHx8MDkyMF5eXl5eXl5eXl5eXkVJfHx8fHx8fHx8UHx8fDExNjU1NjIxOTleXl5DT05WRVJHRU5DRXx8fE58fHx8fHx8fHx8fHx8fHx8fHx8fHx8MjAyMjAxMTQwODAxMDB8fHx8fHx8QQpQVjJ8fHx8fHx8U3x8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHwwMjAyMjAxMTQyMzU5MDAKWkJFfDM1ODgzMTMxXkNPTlZFUkdFTkNFfDIwMjIwMTE0MDgwMTAwfHxJTlNFUlR8TnxBMDR8Xl5eXl5eVUZeXl43ODMyfHxNSApJTjF8MXxBTU98MDE0NTEwMDAyfGNwYW1NdXQ4MTE3MzA4NjN8fHx8fHx8fDIwMjEwMTAxfDIwMjIxMjMxfHx8bm9tODExNzMwODYzXklCUkFISU1eXl5eXlV8MDF8fF4gXl5efHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8c3M4MTE3MzA4NjMKSU4xfDJ8UEFUfHxjcGFtTXV0ODExNzMwODYzfHx8fHx8fHx8fHx8bm9tODExNzMwODYzXl5eXl5eVXx8fF4gXl5efHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8c3M4MTE3MzA4NjMKWkZWfF4K</inboundTemplate>
+    <outboundTemplate encoding="base64">e30=</outboundTemplate>
+    <inboundDataType>HL7V2</inboundDataType>
+    <outboundDataType>JSON</outboundDataType>
+    <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.11.0">
+      <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.11.0">
+        <handleRepetitions>true</handleRepetitions>
+        <handleSubcomponents>true</handleSubcomponents>
+        <useStrictParser>false</useStrictParser>
+        <useStrictValidation>false</useStrictValidation>
+        <stripNamespaces>true</stripNamespaces>
+        <segmentDelimiter>\r</segmentDelimiter>
+        <convertLineBreaks>true</convertLineBreaks>
+      </serializationProperties>
+      <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.11.0">
+        <useStrictParser>false</useStrictParser>
+        <useStrictValidation>false</useStrictValidation>
+        <segmentDelimiter>\r</segmentDelimiter>
+      </deserializationProperties>
+      <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.11.0">
+        <splitType>MSH_Segment</splitType>
+        <batchScript></batchScript>
+      </batchProperties>
+      <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.11.0">
+        <segmentDelimiter>\r</segmentDelimiter>
+        <successfulACKCode>AA</successfulACKCode>
+        <successfulACKMessage></successfulACKMessage>
+        <errorACKCode>AE</errorACKCode>
+        <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+        <rejectedACKCode>AR</rejectedACKCode>
+        <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+        <msh15ACKAccept>false</msh15ACKAccept>
+        <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+      </responseGenerationProperties>
+      <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.11.0">
+        <successfulACKCode>AA,CA</successfulACKCode>
+        <errorACKCode>AE,CE</errorACKCode>
+        <rejectedACKCode>AR,CR</rejectedACKCode>
+        <validateMessageControlId>true</validateMessageControlId>
+        <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+        <originalIdMapVariable></originalIdMapVariable>
+      </responseValidationProperties>
+    </inboundProperties>
+    <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+      <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+        <splitType>JavaScript</splitType>
+        <batchScript></batchScript>
+      </batchProperties>
+    </outboundProperties>
+  </transformer>
+  <responseTransformer version="3.11.0">
+    <elements/>
+    <inboundDataType>JSON</inboundDataType>
+    <outboundDataType>JSON</outboundDataType>
+    <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+      <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+        <splitType>JavaScript</splitType>
+        <batchScript></batchScript>
+      </batchProperties>
+    </inboundProperties>
+    <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.11.0">
+      <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.11.0">
+        <splitType>JavaScript</splitType>
+        <batchScript></batchScript>
+      </batchProperties>
+    </outboundProperties>
+  </responseTransformer>
+  <filter version="3.11.0">
+    <elements/>
+  </filter>
+  <transportName>File Writer</transportName>
+  <mode>DESTINATION</mode>
+  <enabled>true</enabled>
+  <waitForPrevious>true</waitForPrevious>
+</connector>
