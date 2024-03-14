@@ -1,0 +1,35 @@
+{
+  "patient_information": {
+    "id_patient": "811730863",
+    "names": {
+      "name_1": {
+        "last_name": "nom811730863",
+        "first_name": "IBRAHIM"
+      },
+      "name_2": {
+        "last_name": "nom811730863",
+        "first_name": "IBRAHIM"
+      }
+    },
+    "birthday": "09-10-2002",
+    "sex": "Male",
+    "nationnatilty": ""
+  },
+  "address": {
+    "street": "7 RUE HENRI TROYAT",
+    "city": "ville811730863",
+    "zip": "cp811730863"
+  },
+  "movements": {
+    "visit_number": "1165562199",
+    "service": "",
+    "bed": "",
+    "room": "",
+    "admit_time": "14-01-2022 08:01:00"
+  },
+  "stay": {
+    "visit_number": "1165562199",
+    "start_time": "14-01-2022 08:01:00",
+    "end_time": ""
+  }
+}
