@@ -4,7 +4,7 @@
 
 3e étape : Dowload Mirth et ensuite cliquer sur "Lauch Mirth Connect Administrator" pour accéder à l'interface de Mirth
 
-4e étape : Importer le channel "HL7 to JSON" dans Mirth, et le déployer
+4e étape : Importer le channel "HL7 to JSON API" dans Mirth, et le déployer
 
 5e étape : Dans un terminal, se rendre dans le repo "PROJET KAFKA/test" et éxécuter la commande 
 "docker cp ./ mirthconnect:/var/echantillon_hl7"
