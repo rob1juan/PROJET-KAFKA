@@ -61,6 +61,7 @@ services:
       - DATABASE_PASSWORD=admin
     depends_on:
       - postgresdb
+
   pr1:
     build:
       context: ../Sources/Pr1
