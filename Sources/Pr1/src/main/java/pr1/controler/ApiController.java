@@ -1,6 +1,6 @@
 package pr1.controler;
 
-import com.example.demo.service.KafkaSender;
+import pr1.kafka.KafkaSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

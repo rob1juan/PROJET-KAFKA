@@ -7,5 +7,5 @@ RUN mvn clean package -DskipTests
 
 # Étape d'exécution
 FROM openjdk:17-slim
-COPY --from=build /app/target/cr1-kafka-producer-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=build /app/target/Cr1-1.0-SNAPSHOT.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
