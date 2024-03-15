@@ -72,5 +72,15 @@ services:
     ports:
       - "5001:5001"
 
+  cr1:
+    build:
+      context: ../Sources/Cr1
+      dockerfile: Dockerfile
+    container_name: cr1
+    depends_on:
+      - broker
+    ports:
+      - "5002:5002"
+
 volumes:
   pgdata:
