@@ -82,5 +82,15 @@ services:
     ports:
       - "5002:5002"
 
+  pr2cs3:
+    build:
+      context: ../Sources/pr2_cs3
+      dockerfile: Dockerfile
+    container_name: cr1
+    depends_on:
+      - broker
+    ports:
+      - "5003:5003"
+
 volumes:
   pgdata:

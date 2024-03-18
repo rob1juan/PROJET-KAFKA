@@ -88,3 +88,4 @@ docker exec -u root mirthconnect chmod -R 777 /var/echantillon_hl7
 
 docker-compose up -d pr1
 docker-compose up -d cr1
+docker-compose up -d pr2cs3
