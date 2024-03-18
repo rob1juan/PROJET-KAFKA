@@ -1,0 +1,6 @@
+cr1\consumer\ConsumerCreator.class
+cr1\consumer\ConsumerUtils.class
+cr1\postgres\PostgresUtils.class
+cr1\postgres\PostgresConstants.class
+cr1\Main.class
+cr1\kafka\KafkaConstants.class
