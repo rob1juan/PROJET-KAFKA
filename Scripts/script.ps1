@@ -28,6 +28,49 @@ do {
     Start-Sleep -Seconds 1
 } while (-not(Test-Connection localhost -Port 5432 -Quiet))
 
+# Création des tables
+# Remplacer "postgresdb" par le nom de votre conteneur PostgreSQL si différent
+docker exec postgresdb psql -U postgres -d HOPSIIA -c "
+CREATE TABLE Patient (
+    id_patient VARCHAR(255) PRIMARY KEY,
+    birthday DATE,
+    sex VARCHAR(10),
+    nationality VARCHAR(255)
+);
+CREATE TABLE Name (
+    id_name SERIAL PRIMARY KEY,
+    id_patient VARCHAR(255) REFERENCES Patient(id_patient),
+    last_name VARCHAR(255),
+    first_name VARCHAR(255),
+    name_type VARCHAR(50)
+);
+CREATE TABLE Address (
+    id_address SERIAL PRIMARY KEY,
+    id_patient VARCHAR(255) REFERENCES Patient(id_patient),
+    street VARCHAR(255),
+    city VARCHAR(255),
+    zip VARCHAR(50)
+);
+CREATE TABLE Movements (
+    id_movement SERIAL PRIMARY KEY,
+    id_patient VARCHAR(255) REFERENCES Patient(id_patient),
+    visit_number VARCHAR(255) UNIQUE,
+    service VARCHAR(255),
+    bed VARCHAR(50),
+    room VARCHAR(50),
+    admit_time TIMESTAMP
+);
+CREATE TABLE Stay (
+    id_stay SERIAL PRIMARY KEY,
+    visit_number VARCHAR(255) REFERENCES Movements(visit_number),
+    start_time TIMESTAMP,
+    end_time TIMESTAMP
+);
+"
+
+# Affichage des tables
+docker exec postgresdb psql -U postgres -d HOPSIIA -c "\dt"
+
 Write-Host "Postgres est prêt."
 
 # Démarrage de Docker Mirth Connect

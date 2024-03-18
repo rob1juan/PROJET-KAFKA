@@ -1,9 +1,8 @@
 package cr1.postgres;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -18,7 +17,7 @@ public class PostgresUtils {
     public static Connection createPostgresConnection(String username, String password) {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/HOPSIIA", username, password);
+            connection = DriverManager.getConnection("jdbc:postgresql://postgresdb:5432/HOPSIIA", username, password);
             if (connection != null) {
                 return connection;
             } else {
@@ -80,15 +79,15 @@ public class PostgresUtils {
             pstmtMovements.setString(3, movementInfo.get("service").getAsString());
             pstmtMovements.setString(4, movementInfo.get("bed").getAsString());
             pstmtMovements.setString(5, movementInfo.get("room").getAsString());
-            pstmtMovements.setTimestamp(6, java.sql.Timestamp.valueOf(movementInfo.get("admit_time").getAsString()));
+            pstmtMovements.setTimestamp(6, convertToTimestamp(movementInfo.get("admit_time").getAsString()));
             pstmtMovements.executeUpdate();
 
             // Insertion dans la table Stay
             String queryStay = "INSERT INTO Stay (visit_number, start_time, end_time) VALUES (?, ?, ?);";
             PreparedStatement pstmtStay = connection.prepareStatement(queryStay);
             pstmtStay.setString(1, stayInfo.get("visit_number").getAsString());
-            pstmtStay.setTimestamp(2, java.sql.Timestamp.valueOf(stayInfo.get("start_time").getAsString()));
-            pstmtStay.setTimestamp(3, java.sql.Timestamp.valueOf(stayInfo.get("end_time").getAsString()));
+            pstmtStay.setTimestamp(2, convertToTimestamp(stayInfo.get("start_time").getAsString()));
+            pstmtStay.setTimestamp(3, convertToTimestamp(stayInfo.get("end_time").getAsString()));
             pstmtStay.executeUpdate();
 
             connection.close();
@@ -103,5 +102,16 @@ public class PostgresUtils {
         // Assume birthday is in the format "DD-MM-YYYY" and needs to be converted to "YYYY-MM-DD"
         String[] parts = birthday.split("-");
         return parts[2] + "-" + parts[1] + "-" + parts[0];
+    }
+
+    private static Timestamp convertToTimestamp(String dateStr) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date parsedDate = dateFormat.parse(dateStr);
+            return new Timestamp(parsedDate.getTime());
+        } catch (ParseException e) {
+            LOGGER.severe("Failed to parse date: " + dateStr + ", Error: " + e.getMessage());
+            return null;
+        }
     }
 }
