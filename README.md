@@ -67,6 +67,16 @@ Le transfert s'effectuera et Mirth traitera les fichiers.
 
 Voici les commandes supportées par l'application console :
 
+- **help** : Affiche la liste des commandes supportées.
+- **exit** : Quitte l'application.
+- **get_all_patients** : Récupère tous les patients de la base de données.
+- **get_patient_by_id** : Récupère un patient par son identifiant.
+- **get_patient_by_name** : Récupère un patient par son nom.
+- **get_patient_stay_by_id** : Récupère le séjour d'un patient par son identifiant.
+- **get_patient_movements_by_sid** : Récupère les mouvements d'un patient par son identifiant de séjour.
+- **export_patients** : Exporte les patients dans un fichier CSV.
+
+
 
 ## Questions 
 ### Question N° 1 : Architecture Alternative sans Kafka
