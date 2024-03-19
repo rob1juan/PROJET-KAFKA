@@ -86,7 +86,9 @@ services:
     build:
       context: ../Sources/pr2_cs3
       dockerfile: Dockerfile
-    container_name: cr1
+    container_name: pr2cs3
+    stdin_open: true
+    tty: true
     depends_on:
       - broker
     ports:
