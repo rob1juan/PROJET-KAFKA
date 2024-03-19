@@ -13,6 +13,7 @@ Auteurs : ***[Robin JUAN](https://github.com/rob1juan)*** & ***[Maxime GUIOT](ht
 - [Architecture](#architecture)
 - [Prérequis](#prérequis)
 - [Installation et Démarrage](#installation-et-démarrage)
+- [Accéder au terminal](#accéder-au-terminal)
 - [Commandes](#commandes)
 - [Questions](#questions)
     - [Question N° 1 : Architecture Alternative sans Kafka](#question-n°-1--architecture-alternative-sans-kafka)
@@ -62,6 +63,13 @@ docker cp ./ mirthconnect:/var/echantillon_hl7
 ```
 
 Le transfert s'effectuera et Mirth traitera les fichiers.
+
+## Accéder au terminal
+Pour accéder à l'interface de commandes, il suffit dans un cmd d'exécuter la commande
+```bash
+docker attach pr2cs3
+```
+Pour détacher le terminal du conteneur sans arrêter le conteneur, utilisez la séquence de touches Ctrl-p suivi de Ctrl-q.
 
 ## Commandes
 
