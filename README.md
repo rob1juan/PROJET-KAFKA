@@ -1,10 +1,27 @@
 # Projet Kafka avec Spring Boot, PostgreSQL, et Docker
 
 ## Contributeurs 
-JUAN Robin
-GUIOT Maxime
+Auteurs : ***[Robin JUAN](https://github.com/rob1juan)*** & ***[Maxime GUIOT](https://github.com/grand0x)***
+
+École : **[INSA Hauts-de-France](https://www.insa-hautsdefrance.fr/)**
 
 ---
+## Sommaire
+
+- [Sommaire](#sommaire)
+- [Introduction](#introduction)
+- [Architecture](#architecture)
+- [Prérequis](#prérequis)
+- [Installation et Démarrage](#installation-et-démarrage)
+- [Commandes](#commandes)
+- [Questions](#questions)
+    - [Question N° 1 : Architecture Alternative sans Kafka](#question-n°-1--architecture-alternative-sans-kafka)
+    - [Question N°2 : Avis sur les Deux Architectures](#question-n°2--avis-sur-les-deux-architectures)
+    - [Question N°3 : Sécurisation des Échanges dans Kafka](#question-n°3--sécurisation-des-échanges-dans-kafka)
+
+    
+
+## Introduction
 
 Ce projet illustre l'implémentation d'une architecture basée sur Apache Kafka pour le traitement et l'échange de messages dans un système de gestion de données patient. Le système traite des fichiers HL7, les transforme en JSON, les envoie à travers Kafka pour insertion dans PostgreSQL, et permet des interactions via une application console.
 
@@ -45,6 +62,11 @@ docker cp ./ mirthconnect:/var/echantillon_hl7
 ```
 
 Le transfert s'effectuera et Mirth traitera les fichiers.
+
+## Commandes
+
+Voici les commandes supportées par l'application console :
+
 
 ## Questions 
 ### Question N° 1 : Architecture Alternative sans Kafka
