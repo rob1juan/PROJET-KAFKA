@@ -99,3 +99,4 @@ Invoke-Expression "docker exec -u root mirthconnect chmod -R 777 /var/echantillo
 docker-compose up -d pr1
 docker-compose up -d cr1
 docker-compose up -d pr2cs3
+docker-compose up -d cs2pr3
