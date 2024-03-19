@@ -1,8 +1,16 @@
 # Projet Kafka avec Spring Boot, PostgreSQL, et Docker
 
+## Contributeurs 
+JUAN Robin
+GUIOT Maxime
+
+---
+
 Ce projet illustre l'implémentation d'une architecture basée sur Apache Kafka pour le traitement et l'échange de messages dans un système de gestion de données patient. Le système traite des fichiers HL7, les transforme en JSON, les envoie à travers Kafka pour insertion dans PostgreSQL, et permet des interactions via une application console.
 
 ## Architecture
+
+![Architecture projet](/Images/Architecture.png)
 
 L'architecture globale se compose des composants suivants :
 
@@ -26,9 +34,17 @@ Un script PowerShell `script.ps1` est fourni dans Script pour automatiser l'inst
 ./script.ps1
 ```
 
-## Contributeurs 
-JUAN Robin
-GUIOT Maxime
+Une fois démarré, il sera nécéssaire de charger le channel Mirth Connect.
+Pour cela, il faut se rendre sur l'interface web de Mirth Connect (http://localhost:8080) et importer le fichier `HL7 to JSON API.xml` situé dans le dossier `export config`.
+
+Après chargement et déploiement du canal Mirth Connect, il suffit de transférer les fichiers HL7 dans le dossier `/var/echantillon_hl7` du container Mirth.
+
+Dans un terminal sous Linux, se rendre dans le dossier `ECHANTILLONS` et exécuter la commande suivante :
+```bash
+docker cp ./ mirthconnect:/var/echantillon_hl7
+```
+
+Le transfert s'effectuera et Mirth traitera les fichiers.
 
 ## Questions 
 ### Question N° 1 : Architecture Alternative sans Kafka
